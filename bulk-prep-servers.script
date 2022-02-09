@@ -1,0 +1,28 @@
+import * as list from "list-of-rooted-servers.script";
+
+var serverList = list.getServerList('home', 'home', 10);
+/*var toRoot = serverList.filter(list.getUnroot);
+
+for (var i = 0; i < toRoot.length; i++) {
+	var serverName = toRoot[i];
+	exec('open-server.script','home',1,serverName);
+}*/
+//tprint(serverList);
+var serverNames = serverList.filter(list.getRoot);
+//tprint(serverNames.length)
+var target = args[0];
+
+//for (i = 0; i < serverNames.length; i++) {
+for (i = 0; i < 96; i++) {
+	var serverName = serverNames[i];
+	killall(serverName);
+	//tprint(serverName);
+
+	scp('general-hack.script', 'home', serverName);
+	var serverMem = (getServerMaxRam(serverName))
+	//tprint(serverMem);
+	threads = Math.floor(serverMem / 2.4);
+	if(threads > 0) {
+		exec('general-hack.script', serverName, threads, target);
+	}
+}

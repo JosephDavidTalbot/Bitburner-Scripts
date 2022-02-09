@@ -1,0 +1,23 @@
+import * as list from "list-of-rooted-servers.script";
+import * as best from "find-best-server.script";
+
+var serverList = list.getServerList('home', 'home', 10);
+var target = best.bestServer(getHackingLevel());
+
+var serverNames = serverList.filter(list.getRoot);
+
+for (i = 0; i < serverNames.length; i++) {
+	var serverName = serverNames[i];
+	killall(serverName);
+
+	scp('general-hack.script', 'home', serverName);
+	var serverMem = (getServerMaxRam(serverName));
+	threads = Math.floor(serverMem / 2.4);
+	if(threads > 0) {
+		if(getServerMaxMoney(serverName) > 0 && getServerRequiredHackingLevel(serverName) < getHackingLevel()) {
+			exec('general-hack.script', serverName, threads, serverName);
+		} else {
+			exec('general-hack.script', serverName, threads, target);
+		}
+	}
+}

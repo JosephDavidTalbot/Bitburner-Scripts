@@ -1,0 +1,28 @@
+/** @param {NS} ns **/
+
+import * as list from "list-of-rooted-servers.ns";
+import * as best from "find-best-server.ns";
+
+export async function main(ns) {
+	ns.run('open-all-servers.ns');
+	var serverList = list.getServerList(ns, 'home');
+	var serverNames = serverList.filter(name => list.getRoot(ns, name));
+	
+	var target = best.bestServer(ns, ns.getHackingLevel());
+
+	for (var i = 0; i < serverNames.length; i++) {
+		var serverName = serverNames[i];
+		if(ns.getServerMaxRam(serverName) > 7){
+			ns.killall(serverName);
+			await ns.scp('optimized-hack.ns', 'home', serverName);
+			await ns.scp('weaken.script', 'home', serverName);
+			await ns.scp('hack.script', 'home', serverName);
+			await ns.scp('grow.script', 'home', serverName);
+			if(ns.getServerMaxMoney(serverName) > 0 && ns.getServerRequiredHackingLevel(serverName) < ns.getHackingLevel()) {
+				ns.exec('optimized-hack.ns', serverName, 1, serverName);
+			} else {
+				ns.exec('optimized-hack.ns', serverName, 1, target);
+			}
+		}
+	}
+}

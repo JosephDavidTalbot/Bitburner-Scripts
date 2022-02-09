@@ -1,0 +1,29 @@
+/** @param {NS} ns **/
+
+export function getRoot(ns, server) {
+	return ns.hasRootAccess(server);
+}
+
+export function getUnroot(ns, server) {
+	return !ns.hasRootAccess(server);
+}
+
+export function getServerList(ns, home){
+	var serversSeen = [home];
+	for(let i=0; i < serversSeen.length; i++) {
+		var thisScan = ns.scan(serversSeen[i]);
+		for(let j=0; j < thisScan.length; j++) {
+			if (serversSeen.indexOf(thisScan[j])===-1){
+				serversSeen.push(thisScan[j]);
+			}
+		}
+	}
+	serversSeen.shift();
+	return serversSeen;
+	//return [/*"home",*/"n00dles","foodnstuff","sigma-cosmetics","joesguns","hong-fang-tea","harakiri-sushi","iron-gym","darkweb","rizzy-server-0","rizzy-server-1","rizzy-server-2","rizzy-server-3","rizzy-server-3-0","rizzy-server-3-1","rizzy-server-3-2","rizzy-server-3-3","rizzy-server-3-4","rizzy-server-3-5","rizzy-server-3-6","rizzy-server-3-7","rizzy-server-3-8","rizzy-server-3-9","rizzy-server-3-10","rizzy-server-15","rizzy-server-15-0","rizzy-server-15-1","rizzy-server-15-2","rizzy-server-15-3","rizzy-server-15-4","rizzy-server-15-5","rizzy-server-15-6","rizzy-server-15-7","rizzy-server-15-8","zer0","max-hardware","CSEC","nectar-net","omega-net","neo-net","silver-helix","phantasy","comptek","the-hub","netlink","crush-fitness","johnson-ortho","avmnite-02h","summit-uni","I.I.I.I","catalyst","rothman-uni","zb-institute","syscore","lexo-corp","alpha-ent","rho-construction","aevum-police","millenium-fitness","galactic-cyber","aerocorp","snap-fitness","global-pharm","unitalife","omnia","deltaone","defcomm","icarus","zeus-med","univ-energy","solaris","zb-def","nova-med","taiyang-digital","infocomm","titan-labs","run4theh111z","microdyne","applied-energetics","helios","vitalife","fulcrumtech","stormtech","omnitek","kuai-gong",".","4sigma","b-and-a","powerhouse-fitness","nwo","blade","clarkinc","ecorp","megacorp","fulcrumassets","The-Cave"]
+}
+
+export async function main(ns) {
+    let serverList = getServerList(ns, 'home');
+	ns.tprint(serverList);
+}
